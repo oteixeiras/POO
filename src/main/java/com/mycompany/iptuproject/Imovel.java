@@ -4,25 +4,40 @@
  */
 package com.mycompany.iptuproject;
 
+import static com.mycompany.iptuproject.InOut.MsgSemIcone;
+
 /**
  *
  * @author oteixeiras
  */
 public class Imovel {
-    String nome;
-    double imposto;
-    Integer mesesAtraso;
-    double valorIptu;
     Municipio municipio;
+    String nome;
+    boolean  ativo;
+    int numero;
+    int mesesAtraso;
+    double imposto;
+    double valorIptu;
+    double valorFinal;
     
     public Imovel(){
     }
     
-    public Imovel(String nome, Integer mesesAtraso){
+    public Imovel(String nome, int numero, Integer mesesAtraso){
         this.nome = nome;
         this.imposto = calculoImposto(mesesAtraso);
         this.mesesAtraso = mesesAtraso;     
         this.valorIptu = 600.00;
+        this.numero = numero;
+        this.ativo = true;
+        this.valorFinal = valorDevedor(this.imposto, this.valorIptu);
+    }
+    
+    private double valorDevedor(double imposto, double valorIptu){ 
+        double valorImposto = (valorIptu*imposto)/100;
+        double valorTotal = valorIptu + valorImposto;
+        
+        return valorTotal;
     }
     
     private double calculoImposto(Integer valor){
@@ -43,19 +58,49 @@ public class Imovel {
         return valorImposto;
     }
     
+        void associacaoMunicipio(Municipio municipio){
+        this.municipio = municipio;
+    }
+    
     public void alteraValorAnual(double valorAnual){
         this.valorIptu = valorAnual;
     }
     
-    void associacaoMunicipio(Municipio municipio){
-        this.municipio = municipio;
+    public void printDadosImovel(){
+        InOut.MsgSemIcone(
+ "Dados do Imóvel", 
+               "\nNome: " + this.nome +
+               "\nNúmero de identificação: " + this.numero +
+               "Situação do cadastro: " + formatSituacaoCadastro(this.ativo) +
+               "\n Município: " + this.municipio + " - ES" +
+               "\nImposto aplicado: " + this.imposto + "%" +
+               "\nMeses em atraso: " + this.mesesAtraso +
+               "\nValor do IPTU: R$" + this.valorIptu +
+               "\nValor total a ser pago: R$" + this.valorFinal
+        );
     }
     
-    public void print(){
-        System.out.println("nome: " + this.nome +
-               "\nimposto: " + this.imposto +
-               "\nmesesAtraso: " + this.mesesAtraso +
-                "\nvalorIptu: " + this.valorIptu);
+    private String formatSituacaoCadastro(boolean ativo){
+        String situacao;
         
+        if (ativo){
+            situacao = "Cadastro ativado";
+        }else{
+            situacao = "Cadastro desativado";
+        }
+        
+        return situacao;
+    }
+    
+    public void dadosImovel(){
+        System.out.println( 
+              "\nNome: " + this.nome +
+               "\nNúmero de identificação: " + this.numero +
+               "\n Município: " + this.municipio + " - ES" +
+               "\nImposto aplicado: " + this.imposto + "%" +
+               "\nMeses em atraso: " + this.mesesAtraso +
+               "\nValor do IPTU: R$" + this.valorIptu +
+               "\nValor total a ser pago: R$" + this.valorFinal 
+        );
     }
 }
